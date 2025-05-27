@@ -13,6 +13,6 @@
 
 void __attribute__((fastcall, naked)) printf(const char *);
 
-const int __attribute__((fastcall, naked)) wtii();
+const unsigned int __attribute__((fastcall, naked)) wtii();
 
 #endif	

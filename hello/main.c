@@ -11,21 +11,23 @@
  
 #include <stdio.h>
 
+#define STR_SIZE 6
+
 const char *time_s;
-char time[6];
+char time[STR_SIZE];
 
 void convert(int h) {
   
-  for (int i = 4; i >= 0; i--) {
+  for (int i = (STR_SIZE - 2); i >= 0; i--) {
     time[i] = '0';
   }
   
-  for (int i = 4; i >= 0; i--) {
+  for (int i = (STR_SIZE - 2); i >= 0; i--) {
     time[i] = (char)((h%10) + 48);
     h /= 10;
   }
   
-  time[5] = '\0';
+  time[(STR_SIZE - 1)] = '\0';
   
   time_s = time;
   
@@ -34,11 +36,12 @@ void convert(int h) {
 
 int main(void)   
 {
-  int time_i = wtii();
+  unsigned int time_i = wtii();
   
   convert(time_i);
   
-  printf(time_s);
+  printf(time_s); // O horário retornado convertido para hexadecimal considera o fuso UTC+0 (no Brasil é UTC-3)
+  printf("\r\n");
   
   return 0;
 }
