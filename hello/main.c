@@ -11,18 +11,32 @@
  
 #include <stdio.h>
 
+const char *time_s;
+char time[6];
+
+void convert(int h) {
+  
+  for (int i = 4; i >= 0; i--) {
+    time[i] = '0';
+  }
+  
+  for (int i = 4; i >= 0; i--) {
+    time[i] = (char)((h%10) + 48);
+    h /= 10;
+  }
+  
+  time[5] = '\0';
+  
+  time_s = time;
+  
+  return;
+}
+
 int main(void)   
 {
-  
-  char time_s[2];
-  // printf ("Duda");
-  
   int time_i = wtii();
   
-  // while (time_i[i] != '\0') {
-  time_s[0] = (char)time_i;
-    // i++;
-  //}
+  convert(time_i);
   
   printf(time_s);
   

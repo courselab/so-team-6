@@ -33,5 +33,6 @@ end:
 wtii:
 	mov $0x02, %ah
 	int $0x1a
-	mov %cx, %ax
+	mov %cx, %bx
+	mov %bx, %ax
 	ret
