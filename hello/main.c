@@ -14,15 +14,17 @@
 int main(void)   
 {
   
-  // const char time[] = "DAD";
+  char time_s[2];
   // printf ("Duda");
   
-  int h = wtii();
+  int time_i = wtii();
   
   // while (time_i[i] != '\0') {
-  //   time_c[i] = (char)time_i[i];
-  //   i++;
-  // }
+  time_s[0] = (char)time_i;
+    // i++;
+  //}
+  
+  printf(time_s);
   
   return 0;
 }
