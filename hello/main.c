@@ -16,13 +16,13 @@
 const char *time_s;
 char buffer[STR_SIZE];
 
-char *to_str(int t, char b[]) {
+char *to_str(int num, char b[]) {
   
   // Calcula o char equivalente ao algarismo em todas as posições
   for (int i = (STR_SIZE - 2); i >= 0; i--) {
     if(i != 2) {
-      b[i] = (char)((t%16) + 48);
-      t /= 16;
+      b[i] = (char)((num%16) + 48);
+      num /= 16;
     } else {
       b[i] = ':';
     } 
@@ -34,9 +34,11 @@ char *to_str(int t, char b[]) {
 }
 
 char *hour_br(char t[]) {
-  int hour;
-
-  hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
+  int hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
+  
+  if (hour < 0) {
+    hour += 24;
+  }
 
   for(int i = 1; i >= 0; i--){
     t[i] = (char)((hour%10) + 48);
@@ -52,9 +54,11 @@ int main(void)
   
   time_s = to_str(time_i, buffer);
   
+  /*
   printf("Horario (UTC+0): ");
   printf(time_s);
   printf("\r\n");
+  */
   
   printf("Horario (UTC-3): ");
   time_s = hour_br(buffer);
