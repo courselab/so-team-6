@@ -16,6 +16,24 @@
 const char *time_s;
 char buffer[STR_SIZE];
 
+void hour_br(int t) {
+  int hour;
+
+  hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
+
+  if(hour < 10){
+    t[0] = '0';
+    t[1] = (char)(hour + 48);
+  } else {
+    for(i = 1; i >= 0, i++){
+      t[i] = (char)((hour%10) + 48)
+      hour /= 10
+    }
+  }
+  
+  return 0;
+}
+
 char *to_str(int t) {
   
   // Calcula o char equivalente ao algarismo em todas as posições
@@ -41,9 +59,14 @@ int main(void)
   
   printf(time_s);
   printf("\r\n");
-  
+
+  hour_br(time_s);
+  printf(time_s);
+  printf("\r\n");
+
   return 0;
 }
+
 
 
 
