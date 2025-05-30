@@ -18,17 +18,17 @@ char buffer[STR_SIZE];
 
 char *to_str(int t) {
   
-  buffer[(STR_SIZE - 1)] = '\0'; // Atribui '\0' na última posição, determinando o fim do vetor
-  
   // Calcula o char equivalente ao algarismo em todas as posições
-  for (int i = (STR_SIZE - 1); i >= 0; i--) {
+  for (int i = (STR_SIZE - 2); i >= 0; i--) {
     if(i != 2) {
       buffer[i] = (char)((t%16) + 48);
       t /= 16;
     } else {
-      buffer[i] = ":";
+      buffer[i] = ':';
     } 
   }
+  
+  buffer[(STR_SIZE - 1)] = '\0'; // Atribui '\0' na última posição, determinando o fim do vetor
   
   return buffer;
 }
