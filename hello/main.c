@@ -26,8 +26,8 @@ void hour_br(int t) {
     t[1] = (char)(hour + 48);
   } else {
     for(i = 1; i >= 0, i++){
-      t[i] = (char)((hour%10) + 48)
-      hour /= 10
+      t[i] = (char)((hour%10) + 48);
+      hour /= 10;
     }
   }
   
