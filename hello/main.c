@@ -16,19 +16,6 @@
 const char *time_s;
 char buffer[STR_SIZE];
 
-char *hour_br(char t[]) {
-  int hour;
-
-  hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
-
-  for(i = 1; i >= 0, i++){
-    t[i] = (char)((hour%10) + 48);
-    hour /= 10;
-  }
-
-  return t;
-}
-
 char *to_str(int t, char b[]) {
   
   // Calcula o char equivalente ao algarismo em todas as posições
@@ -46,15 +33,30 @@ char *to_str(int t, char b[]) {
   return b;
 }
 
+char *hour_br(char t[]) {
+  int hour;
+
+  hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
+
+  for(int i = 1; i >= 0; i--){
+    t[i] = (char)((hour%10) + 48);
+    hour /= 10;
+  }
+
+  return t;
+}
+
 int main(void)   
 {
   unsigned int time_i = wtii(); // O horário retornado convertido para hexadecimal considera o fuso UTC+0 (no Brasil é UTC-3)
   
-  time_s = to_str(time_i);
+  time_s = to_str(time_i, buffer);
   
-  printf(time_s, buffer);
+  printf("Horario (UTC+0): ");
+  printf(time_s);
   printf("\r\n");
-
+  
+  printf("Horario (UTC-3): ");
   time_s = hour_br(buffer);
   printf(time_s);
   printf("\r\n");
