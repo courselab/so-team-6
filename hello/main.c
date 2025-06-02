@@ -17,7 +17,6 @@ const char *time_s;
 char buffer[STR_SIZE];
 
 char *to_str(int num, char b[]) {
-  
   // Calcula o char equivalente ao algarismo em todas as posições
   for (int i = (STR_SIZE - 2); i >= 0; i--) {
     if(i != 2) {
@@ -34,10 +33,11 @@ char *to_str(int num, char b[]) {
 }
 
 char *hour_br(char t[]) {
-  int hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3;
+  int hour = (((t[0] - '0') * 10) + (t[1] - '0')) - 3; // Subtrai 3 horas do fuso UTC+0
   
+  // Ajusta a hora caso o valor da subtração de negativo
   if (hour < 0) {
-    hour += 24;
+    hour = 24 + hour;
   }
 
   for(int i = 1; i >= 0; i--){
