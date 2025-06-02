@@ -1,5 +1,32 @@
 Explicação
 ==========
 
-1. Passo 1
-2. ...
+Passo 1. Obter a hora atual (arquivo libc.S)
+
+	No arquivo 'libc.S', criamos a função 'wtii', essa função faz uma interrupção na BIOS do sistema para obter a hora atual. 
+    A BIOS retorna a hora no formato de número inteiro, que representa o tempo no fuso horário UTC+0.
+
+Passo 2. Converter e exibir a hora (arquivo main.c)
+
+	No arquivo 'main.c', criamos a função 'to_str', que tem como objetivo transformar o valor da hora,
+    recebido como um inteiro, em uma representação textual (char) no formato 'HH:MM' — ou seja,
+    duas posições para horas, uma posição para o separador ':', e duas para minutos.
+	
+	-> Como a conversão funciona:
+
+		* A hora é recebida como um número inteiro, por exemplo: 4433
+		* Dividimos o número sucessivamente por 16 para converter os dígitos para base hexadecimal
+		* A cada iteração, usamos o resto da divisão (valor % 16) para obter o dígito atual
+		* Em seguida, somamos esse valor a 48, que é o código ASCII do caractere '0', para transformá-lo em caractere numérico
+		* Armazenamos esse caractere em um array de char
+		* Continuamos o processo dividindo o número por 16, até extrair todos os dígitos necessários
+		* Após o término da conversão, temos uma string representando a hora no formato 'HH:MM', ainda no fuso UTC+0
+
+Passo 3. Conversão para o fuso horário de Brasília (UTC−3)
+
+	Com a hora já convertida e representada no fuso UTC+0, utilizamos a função 'hour_br' para ajustar o horário para o fuso horário de Brasília (UTC−3).
+    Essa função realiza a subtração de 3 horas em relação ao horário atual.
+
+Passo 4. Exibição do horário no terminal 
+
+	Após a conversão para o horário brasileiro, utilizamos a função 'printf' para exibir a hora final no terminal, a hora é apresentada no formato 'HH:MM'.
