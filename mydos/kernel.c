@@ -75,7 +75,11 @@ void shell()
        load it and transfer it the execution. Left as exercise. */
 
     if (!cmds[i].funct)
+    {
+      kwrite("Command executed: ");
       kwrite(buffer);
+      kwrite("\n");
+    }
   }
 }
 
@@ -107,26 +111,30 @@ void f_quit()
   go_on = 0;
 }
 
-/* Built-in shell command: example.
-
-   Execute an example user program which invokes a syscall.
-
-   The example program (built from the source 'prog.c') is statically linked
-   to the kernel by the linker script (tydos.ld). In order to extend the
-   example, and load and external C program, edit 'f_exec' and 'prog.c' choosing
-   a different name for the entry function, such that it does not conflict with
-   the 'main' function of the external program.  Even better: remove 'f_exec'
-   entirely, and suppress the 'example_program' section from the tydos.ld, and
-   edit the Makefile not to include 'prog.o' and 'libtydos.o' from 'tydos.bin'.
-
-  */
+/* List files in the volume.
+ * Arguments: (none)
+ */
 
 void f_list()
 {
-  kwrite("What's the disk's name? ");
-  kread(buffer);
+  char a1 = *((int *)(0x7c00 + 0));
+  char a2 = *((int *)(0x7c00 + 1));
+  char a3 = *((int *)(0x7c00 + 2));
+  char a4 = *((int *)(0x7c00 + 3));
+  buffer[0] = a1;
+  buffer[1] = a2;
+  buffer[2] = a3;
+  buffer[3] = a4;
+  buffer[4] = '\0';
   kwrite(buffer);
   kwrite("\n");
+  // unsigned short total_number_of_sectors = *((int *)(0x7c00 + 4));   /* Number of 512-byte disk blocks.         */
+  // int *number_of_boot_sectors = (int *)(0x7c00 + 2);    /* Sectors reserved for boot code.         */
+  // int *number_of_file_entries = (int *)(0x7c00 + 2);    /* Maximum number of files in the disk.    */
+  // int *max_file_size = (int *)(0x7c00 + 2);             /* Maximum size of a file in blocks.       */
+  // int *unused_space = (int *)(0x7c00 + 2);              /* Remaining space less than max_file_size.*/
+  //for (int i = 0; i < total_number_of_sectors; i++)
+    //kwrite("oi");
   return;
 }
 
