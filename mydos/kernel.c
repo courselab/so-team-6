@@ -116,26 +116,62 @@ void f_quit()
  */
 
 void f_list()
-{
-  char a1 = *((int *)(0x7c00 + 0));
-  char a2 = *((int *)(0x7c00 + 1));
-  char a3 = *((int *)(0x7c00 + 2));
-  char a4 = *((int *)(0x7c00 + 3));
-  buffer[0] = a1;
-  buffer[1] = a2;
-  buffer[2] = a3;
-  buffer[3] = a4;
-  buffer[4] = '\0';
+{ 
+  // Header signature
+  // char h1 = *((int *)(0x7c00 + 0));
+  // char h2 = *((int *)(0x7c00 + 1));
+  // char h3 = *((int *)(0x7c00 + 2));
+  // char h3 = *((int *)(0x7c00 + 3));
+  
+  //__asm__("mov $_ENTRIES_ADDR, %ax");
+  //register int entries_addr asm("ax");
+  
+  unsigned short total_number_of_sectors = *((int *)(0x7c00 + 4));  /* Number of 512-byte disk blocks.         */
+  unsigned short number_of_boot_sectors = *((int *)(0x7c00 + 6));   /* Sectors reserved for boot code.         */
+  unsigned short number_of_file_entries = *((int *)(0x7c00 + 8));   /* Maximum number of files in the disk.    */
+  unsigned short max_file_size = *((int *)(0x7c00 + 10));           /* Maximum size of a file in blocks.       */
+  int unused_space = *((int *)(0x7c00 + 12));                       /* Remaining space less than max_file_size.*/
+  
+  unsigned short number_of_entry_sectors = ((32 * number_of_file_entries) + (max_file_size * number_of_file_entries))/512 + 1;
+  
+  __asm__(
+    "mov boot_drive, %dl \n"	              /* Select the boot drive (from rt0.o). */
+    "mov $0x2, %ah \n"		              /* BIOS disk service: op. read sector. */
+    "mov $0x5, %al \n"   /* Number of sectors to read.          */
+    "mov $0x0, %ch \n"		              /* Cylinder coordinate (starts at 0).  */
+    "addb $0xb, %cl \n"   /* Sector coordinate - adds the number of boot sectors already read (starts at 1).  */
+    "mov $0x0, %dh \n"		              /* Head coordinage     (starts at 0).  */
+    "mov $_ENTRIES_ADDR, %bx \n"              /* Where to load the kernel (rt0.o).   */
+  );
+  
+  unsigned char c;
+  
+  for (int p = 0; p < 20; p++)
+  {
+    c = (char)(*((int *)(0x7c00 + (11 * 512) + p)));
+    
+    for(int i = 1; i >= 0; i--){
+      buffer[(p * 3) + i] = (char)((c%16 < 10) ? (c%16 + '0') : (c%16 - 10 + 'A'));
+      c /= 16;
+    }
+    buffer[(p * 3) + 2] = ' ';
+  }
+  buffer[60] = '\0';
   kwrite(buffer);
   kwrite("\n");
-  // unsigned short total_number_of_sectors = *((int *)(0x7c00 + 4));   /* Number of 512-byte disk blocks.         */
-  // int *number_of_boot_sectors = (int *)(0x7c00 + 2);    /* Sectors reserved for boot code.         */
-  // int *number_of_file_entries = (int *)(0x7c00 + 2);    /* Maximum number of files in the disk.    */
-  // int *max_file_size = (int *)(0x7c00 + 2);             /* Maximum size of a file in blocks.       */
-  // int *unused_space = (int *)(0x7c00 + 2);              /* Remaining space less than max_file_size.*/
-  //for (int i = 0; i < total_number_of_sectors; i++)
-    //kwrite("oi");
-  return;
+  
+  
+  //for (int f = 0; f < number_of_file_entries; f++)
+  //{
+   // for (int i = 0; i < 32; i++)
+   // {
+  //    char l = *((int *)(0x7c00 + (number_of_boot_sectors * 512) + (32 * f) + i)); /* Memomy position of a letter 'i' in the entry file 'f' */
+  //    buffer[i] = l;
+  //  }
+ //   buffer[32] = '\0';
+  //  kwrite(buffer);
+  //  kwrite("\n");
+  //}
 }
 
 extern int main();

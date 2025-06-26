@@ -56,6 +56,8 @@ SECTIONS
 	}
 
 	_KERNEL_SIZE = . - _KERNEL_ADDR; /* How many bytes we'll read.      */
+	
+	_ENTRIES_ADDR = .;
 
 	_END_STACK = 0x7c00;	/* Place the stack bellow the program.      */
 

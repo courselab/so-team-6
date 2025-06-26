@@ -31,11 +31,12 @@ int syscall(int number, int arg1, int arg2, int arg3)
   int register ax __asm__("ax") = arg1;   /* First argument  in %ax.   */
   int register dx __asm__("dx") = arg2;   /* Second argument in %dx.   */
   int register cx __asm__("cx") = arg3;   /* Third argument in  %cx.   */
-
+  
   __asm__(
       "int $0x21 \n"  /* Issue int $0x21.                    */
       "popa      \n " /* Restore GP registers.               */
   );
+
 }
 
 /*  Write the string 'str' on the screen.*/
