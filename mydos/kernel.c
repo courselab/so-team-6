@@ -66,7 +66,7 @@ void shell()
 {
   int i;
   clear();
-  kwrite("TinyDOS 1.0\n");
+  kwrite("CapiDOS 1.0 extending from TinyDOS 1.0\n");
 
   while (go_on)
   {
@@ -111,7 +111,7 @@ struct cmd_t cmds[] =
         {"help", f_help}, /* Print a help message.       */
         {"quit", f_quit}, /* Exit TyDOS.                 */
         {"hello", f_hello}, /* Execute an example program. */
-        {"list", f_list}, /* List the files in disk. */
+        {"list", f_list}, /* List the programs in disk. */
         {0, 0}};
 
 /* Build-in shell command: help. */
@@ -121,7 +121,7 @@ void f_help()
   kwrite("...me, Obi-Wan, you're my only hope!\n\n");
   kwrite("   But we can try also some commands:\n");
   kwrite("      hello   (to run a sample user program\n");
-  kwrite("      quit    (to exit TyDOS)\n");
+  kwrite("      quit    (to exit CapiDOS)\n");
   kwrite("      list    (to list the files in disk)\n");
 }
 
@@ -129,31 +129,6 @@ void f_quit()
 {
   kwrite("Program halted. Bye.\r\n");
   go_on = 0;
-}
-
-void print_int_d(int value)
-{
-  for (int p = 10; p >= 0; p--) {
-    buffer[p] = value%10 + '0';
-    value /= 10;
-  }
-  buffer[11] = '\0';
-
-  kwrite(buffer);
-  kwrite("\n");
-}
-
-void print_int_h(int value)
-{
-  for (int p = 10; p >= 0; p--) {
-    buffer[p] = value%16;
-    buffer[p] = (buffer[p] < 10) ? (buffer[p] + '0') : (buffer[p] - 10 + 'A');
-    value /= 16;
-  }
-  buffer[11] = '\0';
-
-  kwrite(buffer);
-  kwrite("\n");
 }
 
 /* List files in the volume.
@@ -187,30 +162,23 @@ void f_list()
 
   int unused_space = *((int *)(START + header_offset));                                   /* Remaining space less than max_file_size.*/
 
-  // Copy entries to RAM
-
+  // Compute the address of the first byte of the first file entry
   unsigned char* entries_addr = START + (number_of_boot_sectors * SECTOR_SIZE);
 
-  int register bx __asm__("bx") = entries_addr;
-  int register cl __asm__("cl") = 13;
-
+  // Copy entries to RAM
+  int register al __asm__("al") = (DIR_ENTRY_LEN * number_of_file_entries)/SECTOR_SIZE + 1; /* Number of sectors to read. */
+  int register bx __asm__("bx") = entries_addr;                                                                             /* Where to load the kernel. */
+  int register cl __asm__("cl") = number_of_boot_sectors + 1;                                                               /* Sector coordinate. */
+  
   __asm__(
-    "mov boot_drive, %dl \n"	              /* Select the boot drive (from rt0.o). */
+    "mov boot_drive, %dl \n"	      /* Select the boot drive (from rt0.o). */
     "mov $0x2, %ah \n"		      /* BIOS disk service: op. read sector. */
-    "mov $0x5, %al \n"                     /* Number of sectors to read.          */
     "mov $0x0, %ch \n"		      /* Cylinder coordinate (starts at 0).  */
-    //"mov $0xd, %cl \n"                    /* Sector coordinate - adds the number of boot sectors already read (starts at 1).  */
     "mov $0x0, %dh \n"		      /* Head coordinage     (starts at 0).  */
-    //"mov $0x9400, %bx \n"           /* Where to load the kernel (rt0.o).   */
-    "int $0x13 \n"		/* Call BIOS disk service 0x13.        */
+    "int $0x13 \n"		      /* Call BIOS disk service 0x13.        */
   );
   
   // Print entries
-  
-  // unsigned char* entries_addr = START + (number_of_boot_sectors * SECTOR_SIZE);
-
-  // print_int_h(entries_addr);
-  
   for (int e = 0; e < number_of_file_entries; e++)
   {
     unsigned char v = 0;
