@@ -1,0 +1,13 @@
+1. Clean your files with `make clean`
+2. Build your binary file with `make mydos.bin`
+3. Use `wc -c mydos.bin` to calculate the number of bytes in your binary (then divide by 512 and round up to calculate the number of blocks)
+4. Create your disk using `make disk.img`
+5. Copy your disk to `syseg/eg/tyfs/` using `cp disk.img ../syseg/eg/tyfs/`
+6. Move to `tyfs/` using `cd ../syseg/eg/tyfs/`
+7. Build tyfs with `make tyfsedit`
+8. Run tyfs with `./tyfsedit`, open your disk and format it reserving the number of blocks of your binary calculated previously
+9. Go back to `mydos/` with `cd ../../../mydos/`
+10. Copy your formated disk with `cp ../syseg/eg/tyfs/disk.img .`
+11. Copy MyDOS into your disk with `make copy`
+12. Run MyDOS with `make disk.img/run`
+13. Have fun

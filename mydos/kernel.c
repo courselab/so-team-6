@@ -120,9 +120,9 @@ void f_help()
 {
   kwrite("...me, Obi-Wan, you're my only hope!\n\n");
   kwrite("   But we can try also some commands:\n");
-  kwrite("      hello   (to run a sample user program\n");
+  kwrite("      hello   (to run a sample user program)\n");
   kwrite("      quit    (to exit CapiDOS)\n");
-  kwrite("      list    (to list the files in disk)\n");
+  kwrite("      list    (to list the programs in disk)\n");
 }
 
 void f_quit()
@@ -163,11 +163,11 @@ void f_list()
   int unused_space = *((int *)(START + header_offset));                                   /* Remaining space less than max_file_size.*/
 
   // Compute the address of the first byte of the first file entry
-  unsigned char* entries_addr = START + (number_of_boot_sectors * SECTOR_SIZE);
+  unsigned char* entries_addr = (unsigned char*)(START + (number_of_boot_sectors * SECTOR_SIZE));
 
   // Copy entries to RAM
   int register al __asm__("al") = (DIR_ENTRY_LEN * number_of_file_entries)/SECTOR_SIZE + 1; /* Number of sectors to read. */
-  int register bx __asm__("bx") = entries_addr;                                                                             /* Where to load the kernel. */
+  int register bx __asm__("bx") = (int)entries_addr;                                                                             /* Where to load the kernel. */
   int register cl __asm__("cl") = number_of_boot_sectors + 1;                                                               /* Sector coordinate. */
   
   __asm__(

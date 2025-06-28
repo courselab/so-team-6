@@ -70,7 +70,14 @@ libtydos.a : libtydos.o
 
 # Housekeeping.
 
+disk.img:
+	rm -f $@
+	dd if=/dev/zero of=$@ count=2880
+
 .PHONY: clean
 
 clean:
-	rm -f *.bin *.o *~ *.s *.a
+	rm -f *.bin *.o *~ *.s *.a *.img
+
+copy:
+	dd if=mydos.bin of=disk.img obs=16 seek=1 conv=notrunc

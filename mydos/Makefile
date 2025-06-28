@@ -72,7 +72,7 @@ libtydos.a : libtydos.o
 .PHONY: clean
 
 clean:
-	rm -f *.bin *.o *~ *.s *.a
+	rm -f *.bin *.o *~ *.s *.a *.img
 # By default, the bootable program name will be tydos.bin
 # If you export this directory to extend the example as part of a programming
 # exercise, redefine $(dos) to reflect your own DOS name, say
@@ -137,9 +137,17 @@ libtydos.a : libtydos.o
 
 # Housekeeping.
 
+disk.img:
+	rm -f $@
+	dd if=/dev/zero of=$@ count=2880
+
 .PHONY: clean
 
 clean:
-	rm -f *.bin *.o *~ *.s *.a
+	rm -f *.bin *.o *~ *.s *.a *.img
+
+copy:
+	dd if=mydos.bin of=disk.img obs=16 seek=1 conv=notrunc
+
 # SYSeg's  convenience rules (not related to the example itself)
 include bintools.mk
