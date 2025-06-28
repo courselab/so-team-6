@@ -1,3 +1,5 @@
+# Instructions
+
 1. Clean your files with `make clean`
 2. Build your binary file with `make mydos.bin`
 3. Use `wc -c mydos.bin` to calculate the number of bytes in your binary (then divide by 512 and round up to calculate the number of blocks)
