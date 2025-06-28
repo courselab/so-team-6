@@ -1,0 +1,3 @@
+disk.img:
+	rm -f $@
+	dd if=/dev/zero of=$@ count=2880
